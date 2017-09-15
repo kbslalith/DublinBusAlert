@@ -15,19 +15,19 @@ class Getime:
     url = 'https://data.dublinked.ie/cgi-bin/rtpi/realtimebusinformation?stopid=3188&format=xml'
     read = urllib.request.urlopen(url).read()
 
-        # Since everthing is read in bytes, convert them into strings
+    # Since everthing is read in bytes, convert them into strings
     new_read = read.decode("utf-8")
     test = str(new_read.split())
     testword = "<duetime>"
 
-        #print (test)
-        #Index the string and print the 10th element from '<' which is the number we care of.
-        #next_word = new_read[new_read.index('duetime') + 8]
+    #print (test)
+    #Index the string and print the 10th element from '<' which is the number we care of.
+    #next_word = new_read[new_read.index('duetime') + 8]
 
     duetime = re.findall(r'<duetime>(.*?)</duetime>',new_read)
     route = re.findall(r'<route>(.*?)</route>',new_read)
     sch_dep_time = re.findall(r'<scheduleddeparturedatetime>(.*?)</scheduleddeparturedatetime>',new_read)
-        #For now print it.
+    #For now print it.
     #print ("This bus to smurfit is in \n")
     mailmsg = str((str(duetime)+" min;"+" Bus No -> "+str(route)+" dep by -> "+str(sch_dep_time)))
 
