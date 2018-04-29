@@ -11,8 +11,9 @@ x=0
 # Read the API using urlib function, 3188 [Leopardstown Bus stop]
 
 
-class Getime:
-    url = 'https://data.dublinked.ie/cgi-bin/rtpi/realtimebusinformation?stopid=3188&format=xml'
+
+def getime(mailid,stopnumber):
+    url = 'https://data.dublinked.ie/cgi-bin/rtpi/realtimebusinformation?stopid='+stopnumber+'&format=xml'
     read = urllib.request.urlopen(url).read()
 
     # Since everthing is read in bytes, convert them into strings
@@ -29,28 +30,33 @@ class Getime:
     sch_dep_time = re.findall(r'<scheduleddeparturedatetime>(.*?)</scheduleddeparturedatetime>',new_read)
     #For now print it.
     #print ("This bus to smurfit is in \n")
-    mailmsg = str((str(duetime)+" min;"+" Bus No -> "+str(route)+" dep by -> "+str(sch_dep_time)))
+    mailmsg = str("Bus Number :  "+ str(route) + "\nWill Come In : " + (str(duetime)+" min " +"\n" + "Will dep by :  "+str(sch_dep_time)))
 
     # Time to send mail
 
     fromaddr = "bustime1102@gmail.com"
-    toaddr = "kbslalith@gmail.com"
+
+#ADD THE NEW JOINEES TO THE LIST HERE !
+    #toaddr = mailid
     msg = MIMEMultipart()
     msg['From'] = fromaddr
-    msg['To'] = toaddr
-    msg['Subject'] = "BUS TIMING OF 114 BUS FROM Leopardstown"
-
+    msg['Subject'] = "Buses From "+stopnumber+" now"
     body = mailmsg
     msg.attach(MIMEText(body, 'plain'))
-
+    #for x in range(len(toaddr)):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login(fromaddr, "bustime@1102")
     text = msg.as_string()
-    server.sendmail(fromaddr, toaddr, text)
+    msg['To'] = mail
+    server.sendmail(fromaddr, mailid, text)
     server.quit()
+    return
 
 
+mail = input("Enter You Email ID: ")
+stop = input("Enter Stop Number: ")
 
+getime(mail,stop)
 
 #sys.exit(0)
